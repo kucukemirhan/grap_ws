@@ -1,0 +1,11 @@
+<library path="grap_controller">
+    <class name="grap_controller/GrapInterface"
+            type= "grap_controller::GrapInterface"
+            base_class_type= "hardware_interface::SystemInterface">
+        <description>
+            GRAP Hardware Interface 
+        </description>
+
+    </class>
+
+</library>

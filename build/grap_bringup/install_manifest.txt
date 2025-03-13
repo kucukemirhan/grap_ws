@@ -1,0 +1,17 @@
+/home/emkk/grap_ws/install/grap_bringup/share/grap_bringup/launch/simulated_robot.launch.py
+/home/emkk/grap_ws/install/grap_bringup/share/grap_bringup/launch/real_robot.launch.py
+/home/emkk/grap_ws/install/grap_bringup/share/ament_index/resource_index/package_run_dependencies/grap_bringup
+/home/emkk/grap_ws/install/grap_bringup/share/ament_index/resource_index/parent_prefix_path/grap_bringup
+/home/emkk/grap_ws/install/grap_bringup/share/grap_bringup/environment/ament_prefix_path.sh
+/home/emkk/grap_ws/install/grap_bringup/share/grap_bringup/environment/ament_prefix_path.dsv
+/home/emkk/grap_ws/install/grap_bringup/share/grap_bringup/environment/path.sh
+/home/emkk/grap_ws/install/grap_bringup/share/grap_bringup/environment/path.dsv
+/home/emkk/grap_ws/install/grap_bringup/share/grap_bringup/local_setup.bash
+/home/emkk/grap_ws/install/grap_bringup/share/grap_bringup/local_setup.sh
+/home/emkk/grap_ws/install/grap_bringup/share/grap_bringup/local_setup.zsh
+/home/emkk/grap_ws/install/grap_bringup/share/grap_bringup/local_setup.dsv
+/home/emkk/grap_ws/install/grap_bringup/share/grap_bringup/package.dsv
+/home/emkk/grap_ws/install/grap_bringup/share/ament_index/resource_index/packages/grap_bringup
+/home/emkk/grap_ws/install/grap_bringup/share/grap_bringup/cmake/grap_bringupConfig.cmake
+/home/emkk/grap_ws/install/grap_bringup/share/grap_bringup/cmake/grap_bringupConfig-version.cmake
+/home/emkk/grap_ws/install/grap_bringup/share/grap_bringup/package.xml

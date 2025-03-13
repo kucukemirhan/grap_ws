@@ -1,0 +1,6 @@
+Invoking command in '/home/emkk/grap_ws/build/grap_bringup': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/emkk/grap_ws/src/grap_bringup -DCMAKE_INSTALL_PREFIX=/home/emkk/grap_ws/install/grap_bringup
+Invoked command in '/home/emkk/grap_ws/build/grap_bringup' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/emkk/grap_ws/src/grap_bringup -DCMAKE_INSTALL_PREFIX=/home/emkk/grap_ws/install/grap_bringup
+Invoking command in '/home/emkk/grap_ws/build/grap_bringup': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/emkk/grap_ws/build/grap_bringup -- -j16 -l16
+Invoked command in '/home/emkk/grap_ws/build/grap_bringup' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/emkk/grap_ws/build/grap_bringup -- -j16 -l16
+Invoking command in '/home/emkk/grap_ws/build/grap_bringup': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/emkk/grap_ws/build/grap_bringup
+Invoked command in '/home/emkk/grap_ws/build/grap_bringup' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/emkk/grap_ws/build/grap_bringup

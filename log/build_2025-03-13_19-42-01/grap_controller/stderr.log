@@ -1,0 +1,28 @@
+[01m[K/home/emkk/grap_ws/src/grap_controller/src/grap_interface.cpp:[m[K In member function ‘[01m[Kvirtual grap_controller::CallbackReturn grap_controller::GrapInterface::on_activate(const rclcpp_lifecycle::State&)[m[K’:
+[01m[K/home/emkk/grap_ws/src/grap_controller/src/grap_interface.cpp:76:79:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kprevious_state[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+   76 |  GrapInterface::on_activate([01;35m[Kconst rclcpp_lifecycle::State & previous_state[m[K)
+      |                             [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~[m[K
+
+[01m[K/home/emkk/grap_ws/src/grap_controller/src/grap_interface.cpp:[m[K In member function ‘[01m[Kvirtual grap_controller::CallbackReturn grap_controller::GrapInterface::on_deactivate(const rclcpp_lifecycle::State&)[m[K’:
+[01m[K/home/emkk/grap_ws/src/grap_controller/src/grap_interface.cpp:99:81:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kprevious_state[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+   99 | rapInterface::on_deactivate([01;35m[Kconst rclcpp_lifecycle::State & previous_state[m[K)
+      |                             [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~[m[K
+
+[01m[K/home/emkk/grap_ws/src/grap_controller/src/grap_interface.cpp:[m[K In member function ‘[01m[Kvirtual hardware_interface::return_type grap_controller::GrapInterface::read(const rclcpp::Time&, const rclcpp::Duration&)[m[K’:
+[01m[K/home/emkk/grap_ws/src/grap_controller/src/grap_interface.cpp:119:78:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Ktime[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+  119 | rface::return_type GrapInterface::read([01;35m[Kconst rclcpp::Time & time[m[K, const rclcpp::Duration & period)
+      |                                        [01;35m[K~~~~~~~~~~~~~~~~~~~~~^~~~[m[K
+
+[01m[K/home/emkk/grap_ws/src/grap_controller/src/grap_interface.cpp:119:109:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kperiod[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+  119 | rface::read(const rclcpp::Time & time, [01;35m[Kconst rclcpp::Duration & period[m[K)
+      |                                        [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~[m[K
+
+[01m[K/home/emkk/grap_ws/src/grap_controller/src/grap_interface.cpp:[m[K In member function ‘[01m[Kvirtual hardware_interface::return_type grap_controller::GrapInterface::write(const rclcpp::Time&, const rclcpp::Duration&)[m[K’:
+[01m[K/home/emkk/grap_ws/src/grap_controller/src/grap_interface.cpp:125:79:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Ktime[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+  125 | face::return_type GrapInterface::write([01;35m[Kconst rclcpp::Time & time[m[K, const rclcpp::Duration & period)
+      |                                        [01;35m[K~~~~~~~~~~~~~~~~~~~~~^~~~[m[K
+
+[01m[K/home/emkk/grap_ws/src/grap_controller/src/grap_interface.cpp:125:110:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kperiod[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+  125 | face::write(const rclcpp::Time & time, [01;35m[Kconst rclcpp::Duration & period[m[K)
+      |                                        [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~[m[K
+

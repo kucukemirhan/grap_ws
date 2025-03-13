@@ -1,0 +1,4 @@
+source;share/grap_controller/local_setup.bash
+source;share/grap_controller/local_setup.dsv
+source;share/grap_controller/local_setup.sh
+source;share/grap_controller/local_setup.zsh

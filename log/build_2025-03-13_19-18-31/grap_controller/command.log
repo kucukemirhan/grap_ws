@@ -1,0 +1,6 @@
+Invoking command in '/home/emkk/grap_ws/build/grap_controller': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/emkk/grap_ws/src/grap_controller -DCMAKE_INSTALL_PREFIX=/home/emkk/grap_ws/install/grap_controller
+Invoked command in '/home/emkk/grap_ws/build/grap_controller' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/emkk/grap_ws/src/grap_controller -DCMAKE_INSTALL_PREFIX=/home/emkk/grap_ws/install/grap_controller
+Invoking command in '/home/emkk/grap_ws/build/grap_controller': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/emkk/grap_ws/build/grap_controller -- -j16 -l16
+Invoked command in '/home/emkk/grap_ws/build/grap_controller' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/emkk/grap_ws/build/grap_controller -- -j16 -l16
+Invoking command in '/home/emkk/grap_ws/build/grap_controller': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/emkk/grap_ws/build/grap_controller
+Invoked command in '/home/emkk/grap_ws/build/grap_controller' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/emkk/grap_ws/build/grap_controller

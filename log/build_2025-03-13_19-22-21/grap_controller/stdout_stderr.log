@@ -1,0 +1,63 @@
+[35m[1mConsolidate compiler generated dependencies of target grap_controller[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/grap_controller.dir/src/grap_interface.cpp.o[0m
+[01m[K/home/emkk/grap_ws/src/grap_controller/src/grap_interface.cpp:[m[K In member function ‘[01m[Kvirtual grap_controller::CallbackReturn grap_controller::GrapInterface::on_activate(const rclcpp_lifecycle::State&)[m[K’:
+[01m[K/home/emkk/grap_ws/src/grap_controller/src/grap_interface.cpp:76:79:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kprevious_state[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+   76 |  GrapInterface::on_activate([01;35m[Kconst rclcpp_lifecycle::State & previous_state[m[K)
+      |                             [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~[m[K
+
+[01m[K/home/emkk/grap_ws/src/grap_controller/src/grap_interface.cpp:[m[K In member function ‘[01m[Kvirtual grap_controller::CallbackReturn grap_controller::GrapInterface::on_deactivate(const rclcpp_lifecycle::State&)[m[K’:
+[01m[K/home/emkk/grap_ws/src/grap_controller/src/grap_interface.cpp:99:81:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kprevious_state[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+   99 | rapInterface::on_deactivate([01;35m[Kconst rclcpp_lifecycle::State & previous_state[m[K)
+      |                             [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~[m[K
+
+[01m[K/home/emkk/grap_ws/src/grap_controller/src/grap_interface.cpp:[m[K In member function ‘[01m[Kvirtual hardware_interface::return_type grap_controller::GrapInterface::read(const rclcpp::Time&, const rclcpp::Duration&)[m[K’:
+[01m[K/home/emkk/grap_ws/src/grap_controller/src/grap_interface.cpp:119:78:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Ktime[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+  119 | rface::return_type GrapInterface::read([01;35m[Kconst rclcpp::Time & time[m[K, const rclcpp::Duration & period)
+      |                                        [01;35m[K~~~~~~~~~~~~~~~~~~~~~^~~~[m[K
+
+[01m[K/home/emkk/grap_ws/src/grap_controller/src/grap_interface.cpp:119:109:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kperiod[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+  119 | rface::read(const rclcpp::Time & time, [01;35m[Kconst rclcpp::Duration & period[m[K)
+      |                                        [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~[m[K
+
+[01m[K/home/emkk/grap_ws/src/grap_controller/src/grap_interface.cpp:[m[K In member function ‘[01m[Kvirtual hardware_interface::return_type grap_controller::GrapInterface::write(const rclcpp::Time&, const rclcpp::Duration&)[m[K’:
+[01m[K/home/emkk/grap_ws/src/grap_controller/src/grap_interface.cpp:125:79:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Ktime[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+  125 | face::return_type GrapInterface::write([01;35m[Kconst rclcpp::Time & time[m[K, const rclcpp::Duration & period)
+      |                                        [01;35m[K~~~~~~~~~~~~~~~~~~~~~^~~~[m[K
+
+[01m[K/home/emkk/grap_ws/src/grap_controller/src/grap_interface.cpp:125:110:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kperiod[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+  125 | face::write(const rclcpp::Time & time, [01;35m[Kconst rclcpp::Duration & period[m[K)
+      |                                        [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~[m[K
+
+[100%] [32m[1mLinking CXX shared library libgrap_controller.so[0m
+[100%] Built target grap_controller
+-- Install configuration: ""
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/grap_controller.xml
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/config
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/config/grap_controllers.yaml
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/launch
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/launch/controller.launch.py
+-- Installing: /home/emkk/grap_ws/install/grap_controller/lib/libgrap_controller.so
+-- Set runtime path of "/home/emkk/grap_ws/install/grap_controller/lib/libgrap_controller.so" to ""
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/include
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/include/grap_interface.hpp
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/environment/library_path.sh
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/environment/library_path.dsv
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/ament_index/resource_index/package_run_dependencies/grap_controller
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/ament_index/resource_index/parent_prefix_path/grap_controller
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/environment/ament_prefix_path.sh
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/environment/ament_prefix_path.dsv
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/environment/path.sh
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/environment/path.dsv
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/local_setup.bash
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/local_setup.sh
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/local_setup.zsh
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/local_setup.dsv
+-- Installing: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/package.dsv
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/ament_index/resource_index/packages/grap_controller
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/ament_index/resource_index/hardware_interface__pluginlib__plugin/grap_controller
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/cmake/ament_cmake_export_include_directories-extras.cmake
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/cmake/ament_cmake_export_libraries-extras.cmake
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/cmake/ament_cmake_export_dependencies-extras.cmake
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/cmake/grap_controllerConfig.cmake
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/cmake/grap_controllerConfig-version.cmake
+-- Up-to-date: /home/emkk/grap_ws/install/grap_controller/share/grap_controller/package.xml
