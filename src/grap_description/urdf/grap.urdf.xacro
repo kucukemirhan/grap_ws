@@ -1,0 +1,423 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="grap">
+
+  <xacro:arg name="is_sim" default="true"/>
+  <xacro:arg name="is_cam_real" default="true"/>
+
+  <xacro:include filename="$(find grap_description)/urdf/grap_gazebo.xacro"/>
+  <xacro:include filename="$(find grap_description)/urdf/grap_control.xacro"/>
+
+  <xacro:if value="$(arg is_cam_real)">
+    <xacro:include filename="$(find grap_description)/urdf/real_camera.urdf.xacro"/>
+  </xacro:if>
+
+  <xacro:unless value="$(arg is_cam_real)">
+    <xacro:include filename="$(find grap_description)/urdf/camera.xacro"/>
+  </xacro:unless>
+
+  <xacro:property name="PI" value="3.14159"/>
+  <xacro:property name="effort" value="30.0"/>
+  <xacro:property name="velocity" value="10.0"/>
+
+  <xacro:macro name="default_transmission" params="joint_number">
+    <transmission name="transmission_${joint_number}">
+      <plugin>transmission_interface/SimpleTransmission</plugin>
+      <actuator name="motor_${joint_number}" role="actuator1"/>
+      <joint name="joint_${joint_number}" role="joint1">
+        <mechanical_reduction>1.0</mechanical_reduction>
+        <!-- <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> -->
+      </joint>
+    </transmission>
+  </xacro:macro>
+
+  <link name="world"/>
+
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="-0.00421198548058446 -0.132961324333918 0.029522138429454"
+        rpy="0 0 0" />
+      <mass
+        value="2.06490187169485" />
+      <inertia
+        ixx="0.00763309208876671"
+        ixy="3.15518256302426E-11"
+        ixz="4.56162161811514E-07"
+        iyy="0.00545339003883257"
+        iyz="1.51827544511072E-05"
+        izz="0.0120480791979355" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://grap_description/meshes/base_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://grap_description/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="virtual_joint" type="fixed">
+    <parent link="world" />
+    <child link="base_link" />
+    <origin rpy="0 0 0" xyz="0 0 0" />
+  </joint>
+
+  <link
+    name="link_1">
+    <inertial>
+      <origin
+        xyz="0.000808969800299604 -0.000138570798438029 0.0278710310309241"
+        rpy="0 0 0" />
+      <mass
+        value="1.345459012011" />
+      <inertia
+        ixx="0.00194001972580055"
+        ixy="-7.09464672629289E-08"
+        ixz="-0.000115014321831031"
+        iyy="0.00149431595473908"
+        iyz="-4.44939328188659E-07"
+        izz="0.00120049182104889" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://grap_description/meshes/link_1.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://grap_description/meshes/link_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="joint_1"
+    type="revolute">
+    <origin xyz="0 0 0.090781" rpy="0 0 -0.04022" />
+    <parent link="base_link" />
+    <child link="link_1" />
+    <axis xyz="0 0 -1" />
+    <limit lower="-${PI}" upper="${PI}" effort="${effort}" velocity="${velocity}"/>
+  </joint>
+
+  <link
+    name="link_2">
+    <inertial>
+      <origin xyz="0.0725656011027376 -0.00493585449999363 0.128767953566197" rpy="0 0 0" />
+      <mass
+        value="1.08660833495192" />
+      <inertia
+        ixx="0.00877681843180501"
+        ixy="-5.66224815842472E-06"
+        ixz="0.000146344087580709"
+        iyy="0.00836958858568757"
+        iyz="0.00029566340732952"
+        izz="0.000729007965972375" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://grap_description/meshes/link_2.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://grap_description/meshes/link_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="joint_2"
+    type="revolute">
+    <origin xyz="0 -0.0005 0.068719" rpy="0 0 0" />
+    <parent link="link_1" />
+    <child link="link_2" />
+    <axis xyz="-1 0 0" />
+    <limit lower="-${PI}" upper="${PI}" effort="${effort}" velocity="${velocity}"/>
+  </joint>
+
+  <link
+    name="link_3">
+    <inertial>
+      <origin xyz="0.00556942315189014 0.0159629818583244 0.0167696823119708" rpy="0 0 0" />
+      <mass
+        value="0.398679361770722" />
+      <inertia
+        ixx="0.000416745288177109"
+        ixy="-3.47434917961218E-06"
+        ixz="3.23990501593985E-06"
+        iyy="0.000375158213106478"
+        iyz="-4.50186074962209E-05"
+        izz="0.000325767200255177" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://grap_description/meshes/link_3.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://grap_description/meshes/link_3.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="joint_3" type="revolute">
+    <origin xyz="0 -0.0095271 0.24582" rpy="0.041978 0 0" />
+    <parent link="link_2" />
+    <child link="link_3" />
+    <axis xyz="1 0 0" />
+    <limit lower="-${PI}" upper="${PI}" effort="${effort}" velocity="${velocity}"/>
+  </joint>
+
+  <link
+    name="link_4">
+    <inertial>
+      <origin xyz="-0.000450394342593537 0.0976802655619906 2.03746135479799E-05" rpy="0 0 0" />
+      <mass value="1.8261804701663" />
+      <inertia
+        ixx="0.00210255182937435"
+        ixy="2.29902955299491E-05"
+        ixz="-7.18041313732403E-07"
+        iyy="0.00203452811208358"
+        iyz="-9.16847068684897E-08"
+        izz="0.00204365103205903" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://grap_description/meshes/link_4.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://grap_description/meshes/link_4.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="joint_4"
+    type="revolute">
+    <origin xyz="-0.000427000000000295 0.054679674711157 0.02799999999999" rpy="0 0.00292198840003054 0" />
+    <parent link="link_3" />
+    <child link="link_4" />
+    <axis xyz="0 -1 0" />
+    <limit lower="-${PI}" upper="${PI}" effort="${effort}" velocity="${velocity}"/>
+  </joint>
+
+  <link
+    name="link_5">
+    <inertial>
+      <origin xyz="-0.000940353193648331 0.0653029129196113 -0.00549326154095703" rpy="0 0 0" />
+      <mass
+        value="0.374215035422608" />
+      <inertia
+        ixx="0.000270325796137459"
+        ixy="-6.15170805624937E-08"
+        ixz="5.79348371080446E-07"
+        iyy="0.000236192995819435"
+        iyz="1.1525902201961E-06"
+        izz="0.000265738649483187" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://grap_description/meshes/link_5.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://grap_description/meshes/link_5.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="joint_5" type="revolute">
+    <origin xyz="0 0.157320325288843 0" rpy="0 0 0" />
+    <parent link="link_4" />
+    <child link="link_5" />
+    <axis xyz="1 0 0" />
+    <limit lower="-${PI}" upper="${PI}" effort="${effort}" velocity="${velocity}"/>
+  </joint>
+
+  <link
+    name="gripper">
+    <inertial>
+      <origin
+        xyz="-2.68262754406084E-05 0.034601415676076 -0.00192591497150746"
+        rpy="0 0 0" />
+      <mass
+        value="0.086559841068276" />
+      <inertia
+        ixx="1.28836553131188E-05"
+        ixy="-2.16585157564151E-07"
+        ixz="1.9387711366824E-07"
+        iyy="3.83162023632297E-05"
+        iyz="4.43523340333197E-07"
+        izz="3.10662084307227E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://grap_description/meshes/gripper.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://grap_description/meshes/gripper.STL" />
+      </geometry>
+    </collision>
+  </link>
+  
+  <joint name="joint_6" type="revolute">
+    <origin xyz="-0.001 0.096952 -0.0080658" rpy="-0.083011 -0.014025 0.0011669" />
+    <parent link="link_5" />
+    <child link="gripper" />
+    <axis xyz="0 1 0" />
+    <limit lower="-${PI}" upper="${PI}" effort="${effort}" velocity="${velocity}"/>
+  </joint>
+
+  <link
+    name="jaw_1">
+    <inertial>
+      <origin xyz="-0.0163227415466946 0.0109639611316651 -0.0103863936568477" rpy="0 0 0" />
+      <mass value="0.00654748908881563" />
+      <inertia
+        ixx="8.84676971240293E-07"
+        ixy="1.95149751371114E-08"
+        ixz="-7.19300070994304E-08"
+        iyy="7.00611451021727E-07"
+        iyz="1.59781110542551E-07"
+        izz="6.07697845789848E-07" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://grap_description/meshes/jaw_1.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.250980392156863 0.250980392156863 0.250980392156863 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://grap_description/meshes/jaw_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="gripper_to_jaw1" type="prismatic">
+    <origin xyz="0 0.0492703212936029 0.0127749999999998" rpy="0 0 0" />
+    <parent link="gripper" />
+    <child link="jaw_1" />
+    <axis xyz="1 0 0" />
+    <limit lower="0" upper="0.008" effort="${effort}" velocity="${velocity}"/>
+  </joint>
+
+  <link name="jaw_2">
+    <inertial>
+      <origin xyz="0.0212544075235043 0.0110527863198366 0.0105172602203642" rpy="0 0 0" />
+      <mass value="0.00651398599816586" />
+      <inertia
+        ixx="8.60320637498025E-07"
+        ixy="-2.08874044579361E-08"
+        ixz="-7.39519895968084E-08"
+        iyy="6.78016333592718E-07"
+        iyz="-1.4826583785601E-07"
+        izz="5.94973793624687E-07" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://grap_description/meshes/jaw_2.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.250980392156863 0.250980392156863 0.250980392156863 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://grap_description/meshes/jaw_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="gripper_to_jaw2" type="prismatic">
+    <origin xyz="0.0027062 0.04927 -0.012375" rpy="0 0 0" />
+    <parent link="gripper" />
+    <child link="jaw_2" />
+    <axis xyz="1 0 0" />
+    <limit lower="-0.008" upper="0" effort="${effort}" velocity="${velocity}"/>
+    <mimic joint="gripper_to_jaw1" multiplier="-1" offset="0" />
+  </joint>
+
+  <xacro:default_transmission joint_number="1"/>
+  <xacro:default_transmission joint_number="2"/>
+  <xacro:default_transmission joint_number="3"/>
+  <xacro:default_transmission joint_number="4"/>
+  <xacro:default_transmission joint_number="5"/>
+  <xacro:default_transmission joint_number="6"/>
+
+  <transmission name="transmission_jaw">
+    <plugin>transmission_interface/SimpleTransmission</plugin>
+    <actuator name="motor_jaw" role="actuator1"/>
+    <joint name="gripper_to_jaw1" role="joint1">
+      <mechanical_reduction>1.0</mechanical_reduction>
+      <!-- <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> -->
+    </joint>
+  </transmission>
+
+
+
+</robot>
