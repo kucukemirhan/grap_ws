@@ -1,107 +1,219 @@
+#include <rclcpp/rclcpp.hpp>
+#include <sensor_msgs/msg/joy.hpp>
+#include <geometry_msgs/msg/twist.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
 #include <moveit/move_group_interface/move_group_interface.h>
-#include <moveit/planning_scene_interface/planning_scene_interface.h>
-#include <moveit_msgs/msg/display_robot_state.hpp>
-#include <moveit_msgs/msg/display_trajectory.hpp>
+#include <thread>
 
-static const rclcpp::Logger LOGGER = rclcpp::get_logger("move_group_demo");
+using namespace std::chrono_literals;
 
-int main(int argc, char **argv)
+class TeleopCartesian
 {
-    rclcpp::init(argc, argv);
-    rclcpp::NodeOptions node_options;
-    node_options.automatically_declare_parameters_from_overrides(true);
-    auto move_group_node = rclcpp::Node::make_shared("move_group_interface_tutorial", node_options);
+public:
+  TeleopCartesian(const rclcpp::Node::SharedPtr& node)
+  : node_(node),
+    move_group_(node_, "grap_arm"),
+    home_button_idx_(node_->declare_parameter<int>("home_button", 0))
+  {
+    bool simulated = false;
+    node_->get_parameter("use_sim_time", simulated);
 
-    rclcpp::executors::SingleThreadedExecutor executor;
-    executor.add_node(move_group_node);
-    std::thread([&executor]() { executor.spin(); }).detach();
+    if (simulated) {
+      RCLCPP_INFO(node_->get_logger(), "*** SIMULATION MODE ***");
+      // Wait for /clock to start
+      while (rclcpp::ok() && node_->now().nanoseconds() == 0) {
+        rclcpp::spin_some(node_);
+        std::this_thread::sleep_for(10ms);
+      }
+    } else {
+      RCLCPP_INFO(node_->get_logger(), "*** REAL MODE ***");
+    }
 
-    static const std::string PLANNING_GROUP_ARM = "grap_arm";
-    moveit::planning_interface::MoveGroupInterface move_group_arm(
-        move_group_node, PLANNING_GROUP_ARM);
+    // Initialize last_twist_time_ from same clock source
+    last_twist_time_ = node_->now();
 
-    const moveit::core::JointModelGroup *joint_model_group_arm =
-        move_group_arm.getCurrentState()->getJointModelGroup(PLANNING_GROUP_ARM);
+    RCLCPP_INFO(node_->get_logger(),
+                "End effector link: %s",
+                move_group_.getEndEffectorLink().c_str());
 
-    // Get Current State
-    moveit::core::RobotStatePtr current_state_arm =
-        move_group_arm.getCurrentState(10);
+    waitForRobotState();
 
-    std::vector<double> joint_group_positions_arm;
-    current_state_arm->copyJointGroupPositions(joint_model_group_arm, joint_group_positions_arm);
-    move_group_arm.setStartStateToCurrentState();
+    // Subscribe to /joy
+    joy_sub_ = node_->create_subscription<sensor_msgs::msg::Joy>(
+      "/joy", 10,
+      std::bind(&TeleopCartesian::joyCallback, this, std::placeholders::_1));
 
-    // Go Home
-    RCLCPP_INFO(LOGGER, "Going Home");
+    // Subscribe to /cmd_vel
+    cmd_vel_sub_ = node_->create_subscription<geometry_msgs::msg::Twist>(
+      "/cmd_vel", 10,
+      std::bind(&TeleopCartesian::cmdVelCallback, this, std::placeholders::_1));
 
-    joint_group_positions_arm[0] = 0.00;   // Shoulder Pan
-    joint_group_positions_arm[1] = -2.50;  // Shoulder Lift
-    joint_group_positions_arm[2] = 1.50;   // Elbow
-    joint_group_positions_arm[3] = -1.50;  // Wrist 1
-    joint_group_positions_arm[4] = -1.55;  // Wrist 2
-    joint_group_positions_arm[5] = 0.00;   // Wrist 3
+    // 50 Hz control loop
+    timer_ = node_->create_wall_timer(
+      20ms,
+      std::bind(&TeleopCartesian::controlLoop, this));
 
-    move_group_arm.setJointValueTarget(joint_group_positions_arm);
-    moveit::planning_interface::MoveGroupInterface::Plan my_plan_arm;
-    bool success_arm = (move_group_arm.plan(my_plan_arm) ==
-        moveit::core::MoveItErrorCode::SUCCESS);
+    RCLCPP_INFO(node_->get_logger(),
+                "Teleop Cartesian ready — running at 50 Hz.");
+  }
 
-    move_group_arm.execute(my_plan_arm);
+private:
+  // Node + MoveIt interface
+  rclcpp::Node::SharedPtr                        node_;
+  moveit::planning_interface::MoveGroupInterface move_group_;
 
-    // Pregrasp
-    RCLCPP_INFO(LOGGER, "Pregrasp Position");
+  // Subscriptions & timer
+  rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr   joy_sub_;
+  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub_;
+  rclcpp::TimerBase::SharedPtr                             timer_;
 
-    geometry_msgs::msg::Pose target_pose1;
-    target_pose1.orientation.x = -1.0;
-    target_pose1.orientation.y = 0.0;
-    target_pose1.orientation.z = 0.0;
-    target_pose1.orientation.w = 0.0;
-    target_pose1.position.x = 0.343;
-    target_pose1.position.y = 0.132;
-    target_pose1.position.z = 0.264;
+  // Home-button index & last Joy message
+  int                                               home_button_idx_;
+  sensor_msgs::msg::Joy::SharedPtr                  last_joy_msg_;
 
-    move_group_arm.setPoseTarget(target_pose1);
+  // Shared state
+  geometry_msgs::msg::Pose  current_pose_;
+  geometry_msgs::msg::Pose  target_pose_;
+  geometry_msgs::msg::Twist last_twist_;
+  rclcpp::Time              last_twist_time_;
+  std::mutex                mutex_;
 
-    success_arm = (move_group_arm.plan(my_plan_arm) ==
-        moveit::core::MoveItErrorCode::SUCCESS);
+  void waitForRobotState()
+  {
+    rclcpp::Rate rate(10);
+    while (rclcpp::ok() && !move_group_.getCurrentState()) {
+      rclcpp::spin_some(node_);
+      rate.sleep();
+    }
+    current_pose_ = move_group_.getCurrentPose().pose;
+    target_pose_  = current_pose_;
+    RCLCPP_INFO(node_->get_logger(), "Initial robot state received.");
+  }
 
-    move_group_arm.execute(my_plan_arm);
+  void joyCallback(const sensor_msgs::msg::Joy::SharedPtr msg)
+  {
+    int curr = 0, prev = 0;
+    if (home_button_idx_ < static_cast<int>(msg->buttons.size())) {
+      curr = msg->buttons[home_button_idx_];
+    }
+    if (last_joy_msg_ && home_button_idx_ < static_cast<int>(last_joy_msg_->buttons.size())) {
+      prev = last_joy_msg_->buttons[home_button_idx_];
+    }
 
-    // Approach
-    RCLCPP_INFO(LOGGER, "Approach to object!");
+    // Rising edge → go home
+    if (curr == 1 && prev == 0) {
+      RCLCPP_INFO(node_->get_logger(), "Home button pressed — moving to home pose.");
+      goToHome();
+    }
 
-    std::vector<geometry_msgs::msg::Pose> approach_waypoints;
-    target_pose1.position.z -= 0.03;
-    approach_waypoints.push_back(target_pose1);
+    last_joy_msg_ = msg;
+  }
 
-    target_pose1.position.z -= 0.03;
-    approach_waypoints.push_back(target_pose1);
+  void cmdVelCallback(const geometry_msgs::msg::Twist::SharedPtr msg)
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    last_twist_      = *msg;
+    last_twist_time_ = node_->now();
+  }
 
-    moveit_msgs::msg::RobotTrajectory trajectory_approach;
-    const double jump_threshold = 0.0;
-    const double eef_step = 0.01;
+  void controlLoop()
+  {
+    geometry_msgs::msg::Twist twist;
+    rclcpp::Time            stamp;
+    {
+      std::lock_guard<std::mutex> lock(mutex_);
+      twist = last_twist_;
+      stamp = last_twist_time_;
+    }
 
-    double fraction = move_group_arm.computeCartesianPath(
-        approach_waypoints, eef_step, jump_threshold, trajectory_approach);
+    // If idle >0.1 s or zero twist → stop
+    if ((node_->now() - stamp).seconds() > 0.1 ||
+        (twist.linear.x == 0.0 && twist.linear.y == 0.0 && twist.linear.z == 0.0))
+    {
+      move_group_.stop();
+      std::lock_guard<std::mutex> lock(mutex_);
+      target_pose_ = current_pose_;
+      return;
+    }
 
-    move_group_arm.execute(trajectory_approach);
+    // Integrate small Cartesian step
+    constexpr double loop_dt = 0.02;  // 50 Hz
+    constexpr double vel_sf  = 0.05;  // m/unit/sec
+    {
+      std::lock_guard<std::mutex> lock(mutex_);
+      target_pose_.position.x += twist.linear.x * vel_sf * loop_dt;
+      target_pose_.position.y += twist.linear.y * vel_sf * loop_dt;
+      target_pose_.position.z += twist.linear.z * vel_sf * loop_dt;
+    }
 
-    // Retreat
-    RCLCPP_INFO(LOGGER, "Retreat from object!");
+    executeCartesianStep();
+  }
 
-    std::vector<geometry_msgs::msg::Pose> retreat_waypoints;
-    target_pose1.position.z += 0.03;
-    retreat_waypoints.push_back(target_pose1);
+  void executeCartesianStep()
+  {
+    std::vector<geometry_msgs::msg::Pose> waypoints;
+    {
+      std::lock_guard<std::mutex> lock(mutex_);
+      waypoints = { current_pose_, target_pose_ };
+    }
 
-    target_pose1.position.z += 0.03;
-    retreat_waypoints.push_back(target_pose1);
+    moveit_msgs::msg::RobotTrajectory traj;
+    double fraction = move_group_.computeCartesianPath(
+      waypoints, /*eef_step*/ 0.005, /*jump_threshold*/ 0.0, traj);
 
-    moveit_msgs::msg::RobotTrajectory trajectory_retreat;
-    fraction = move_group_arm.computeCartesianPath(
-        retreat_waypoints, eef_step, jump_threshold, trajectory_retreat);
+    if (fraction > 0.9) {
+      move_group_.execute(traj);
+      std::lock_guard<std::mutex> lock(mutex_);
+      current_pose_ = target_pose_;
+    } else {
+      RCLCPP_WARN(node_->get_logger(),
+                  "Cartesian plan failed: %.0f%%", fraction * 100.0);
+    }
+  }
 
-    move_group_arm.execute(trajectory_retreat);
+  void goToHome()
+  {
+    // Define your robot’s home joint values here:
+    std::vector<double> home_positions = {
+      0.0,  // Shoulder Pan
+      0.0,  // Shoulder Lift
+      0.0,  // Elbow
+      0.0,  // Wrist 1
+      0.0,  // Wrist 2
+      0.0   // Wrist 3
+    };
 
-    rclcpp::shutdown();
-    return 0;
+    move_group_.setJointValueTarget(home_positions);
+    moveit::planning_interface::MoveGroupInterface::Plan plan;
+    bool success = (move_group_.plan(plan) == moveit::core::MoveItErrorCode::SUCCESS);
+
+    if (success) {
+      move_group_.execute(plan);
+      RCLCPP_INFO(node_->get_logger(), "Reached home pose.");
+      std::lock_guard<std::mutex> lock(mutex_);
+      current_pose_ = move_group_.getCurrentPose().pose;
+      target_pose_  = current_pose_;
+    } else {
+      RCLCPP_WARN(node_->get_logger(), "Home plan failed.");
+    }
+  }
+};
+
+int main(int argc, char *argv[])
+{
+  // Initialize ROS2
+  rclcpp::init(argc, argv);
+
+  // NodeOptions can override use_sim_time via launch/CLI
+  rclcpp::NodeOptions opts;
+  auto node = rclcpp::Node::make_shared("teleop_cartesian", opts);
+
+  // Instantiate and spin
+  auto teleop = std::make_shared<TeleopCartesian>(node);
+  rclcpp::executors::MultiThreadedExecutor executor;
+  executor.add_node(node);
+  executor.spin();
+
+  rclcpp::shutdown();
+  return 0;
 }
