@@ -110,7 +110,7 @@ install(DIRECTORY include/
         FILES_MATCHING PATTERN "*.h"
 )
 
-foreach(dir etc launch)
+foreach(dir launch)
     install(DIRECTORY ${dir}/
             DESTINATION share/${PROJECT_NAME}/${dir})
 endforeach()

@@ -10,7 +10,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
     use_sim_time_arg = DeclareLaunchArgument(
         "use_sim_time",
-        default_value="true",
+        default_value="false",
         description="If true, nodes will subscribe to /clock"
     )
     use_sim_time = LaunchConfiguration("use_sim_time")

@@ -20,6 +20,7 @@ install(
 add_executable(move_program src/move_program.cpp)
 add_executable(xyz_trajectory src/xyz_trajectory.cpp)
 add_executable(cartesian_path src/cartesian_path.cpp)
+add_executable(aruco_follower src/aruco_follower.cpp)
 
 target_include_directories(move_program PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -58,10 +59,24 @@ ament_target_dependencies(
   "rclcpp"
 )
 
+target_include_directories(aruco_follower PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_compile_features(aruco_follower PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+
+ament_target_dependencies(
+  aruco_follower
+  "moveit_ros_planning_interface"
+  "rclcpp"
+  "tf2_geometry_msgs"
+  "geometry_msgs"
+)
+
 install(TARGETS 
   xyz_trajectory
   move_program
   cartesian_path
+  aruco_follower
   DESTINATION lib/${PROJECT_NAME})
   
 if(BUILD_TESTING)
