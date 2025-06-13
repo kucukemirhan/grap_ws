@@ -18,8 +18,9 @@ public:
     tf_buffer_(node_->get_clock()),
     tf_listener_(tf_buffer_),
     home_button_idx_(node_->declare_parameter<int>("home_button", 0)),
-    control_period_(100ms),
-    loop_dt_(0.1)
+    max_joint_movement_(node_->declare_parameter<double>("max_joint_movement", 0.5)),
+    control_period_(20ms),
+    loop_dt_(0.02)  // 50 Hz
   {
     bool simulated = node_->get_parameter("use_sim_time", simulated);
     if (simulated) {
@@ -51,6 +52,10 @@ public:
 
     RCLCPP_INFO(node_->get_logger(), "Teleop Cartesian running at %.0f Hz.",
                 1.0 / loop_dt_);
+
+    move_group_.setMaxVelocityScalingFactor(0.3);  // Reduce speed for smoother motion
+    move_group_.setMaxAccelerationScalingFactor(0.3);
+    move_group_.setPlanningTime(0.1);  // Quick planning for real-time control
   }
 
 private:
@@ -64,6 +69,7 @@ private:
   rclcpp::TimerBase::SharedPtr timer_;
 
   int home_button_idx_;
+  double max_joint_movement_;
   geometry_msgs::msg::Pose current_pose_, target_pose_;
   geometry_msgs::msg::Twist last_twist_;
   rclcpp::Time last_twist_time_;
@@ -160,6 +166,22 @@ private:
     double frac = move_group_.computeCartesianPath(wps, 0.005, 0.0, traj);
 
     if (frac > 0.9) {
+      // Evaluate joint movement range
+      const auto& jt = traj.joint_trajectory;
+      if (jt.points.size() > 1) {
+        const auto& start = jt.points.front().positions;
+        const auto& end   = jt.points.back().positions;
+        for (size_t i = 0; i < end.size(); ++i) {
+          double delta = std::abs(end[i] - start[i]);
+          if (delta > max_joint_movement_) {
+            RCLCPP_WARN(node_->get_logger(),
+              "Aborting execution: joint %zu moves %.2f rad > threshold %.2f rad",
+              i, delta, max_joint_movement_);
+            return;
+          }
+        }
+      }
+
       move_group_.execute(traj);
       lookupPose(current_pose_);
     } else {
