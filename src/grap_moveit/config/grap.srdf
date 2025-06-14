@@ -2,6 +2,13 @@
 
 <robot name="grap">
 
+    <group name="arm_3dof">
+        <joint name="virtual_joint"/>
+        <joint name="joint_1"/>
+        <joint name="joint_2"/>
+        <joint name="joint_3"/>
+    </group>
+
     <group name="grap_arm">
         <joint name="virtual_joint"/>
         <joint name="joint_1"/>

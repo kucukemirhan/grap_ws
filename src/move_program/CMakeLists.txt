@@ -11,6 +11,10 @@ find_package(moveit_ros_planning_interface REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(rclcpp_action REQUIRED)              
+find_package(control_msgs REQUIRED)               
+find_package(trajectory_msgs REQUIRED)            
+
 
 install(
   DIRECTORY launch config
@@ -27,11 +31,15 @@ target_include_directories(move_program PUBLIC
   $<INSTALL_INTERFACE:include>)
 target_compile_features(move_program PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 
-ament_target_dependencies(
-  move_program
-  "moveit_ros_planning_interface"
-  "rclcpp"
+ament_target_dependencies(move_program
+  rclcpp
+  rclcpp_action
+  control_msgs
+  trajectory_msgs
+  tf2_ros
+  moveit_ros_planning_interface
 )
+
 
 
 target_include_directories(xyz_trajectory PUBLIC
