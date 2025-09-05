@@ -11,6 +11,9 @@ ROS 2 Humble • MoveIt 2 • ros2_control • RealSense • YOLOv8 • ArUco
 ![System Picture](docs/img1.gif)  
 *GAZEBO simulation of the system*
 
+![System Picture](docs/img2.gif)  
+*Tracking YOLOv8 object (Water Bottle)*
+
 ## Package Architecture
 
 | Package | Responsibility |
