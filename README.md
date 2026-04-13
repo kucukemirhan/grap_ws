@@ -1,9 +1,10 @@
 # GRAP (Greenhouse Robot for Automated Picking)
 
-
 ROS 2 Humble-based GRAP workspace. 
 
 The system integrates robot description, control, planning, camera drivers, and perception nodes. With the bringup launch files, the entire stack can be started at once.
+
+📄 **Project Paper (Preprint):** [Collision-Free Tomato Harvesting with a 6-DOF Robotic Manipulator](./Senior_Design_Project_Paper.pdf) *(TÜBİTAK 2209-A Undergraduate Research Project)*
 
 > Built and tested on **NVIDIA Jetson Orin Nano Developer Kit** + **Intel RealSense D435**.
 
